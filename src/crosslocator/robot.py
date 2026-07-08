@@ -40,3 +40,12 @@ class CrossLocator:
         if platform:
             return locator.for_platform(platform)
         return locator.resolve()
+
+    def use_appium_session(self) -> None:
+        """Auto-detect the platform from the active AppiumLibrary session."""
+        from robot.libraries.BuiltIn import BuiltIn
+
+        from .appium import use_appium
+
+        appium_lib = BuiltIn().get_library_instance("AppiumLibrary")
+        use_appium(appium_lib._current_application())

@@ -73,13 +73,32 @@ Open Add Patient
 
 1. an explicit `set_current_platform(...)`
 2. the `CROSSLOCATOR_PLATFORM` environment variable
-3. a registered provider — e.g. read from a live Appium session:
+3. a registered provider — typically an Appium session (see below)
+
+## Automatic platform detection (Appium)
+
+Let crosslocator read the platform straight from a live Appium session, so you
+never call `set_current_platform` by hand.
+
+**Python (Appium-Python-Client):**
 
 ```python
-from crosslocator import set_platform_provider
+from crosslocator import use_appium
 
-set_platform_provider(lambda: driver.capabilities["platformName"])
+use_appium(driver)      # your Appium webdriver
+LOGIN_BUTTON.resolve()  # platform detected from the session capabilities
 ```
+
+**Robot Framework (AppiumLibrary):**
+
+```robotframework
+Open Application    ${REMOTE_URL}    platformName=Android    ...
+Use Appium Session
+${selector}=    Resolve Locator    ${LOGIN_BUTTON}
+```
+
+iPad is detected from the session device name and resolves to iPad selectors
+(falling back to iOS when none are defined).
 
 ## Fallback rules
 
@@ -95,8 +114,9 @@ Framework suite.
 
 ## Roadmap
 
-- **v0.1 (this release):** the core `Locator` type, platform resolution, Robot Framework keywords.
-- **Next:** a built-in Appium session provider, Playwright/Browser helpers, and declarative loading of whole screens from YAML/dict.
+- **v0.1:** the core `Locator` type, platform resolution, Robot Framework keywords.
+- **v0.2 (current):** automatic platform detection from a live Appium session.
+- **Next:** Playwright/Browser helpers, and declarative loading of whole screens from YAML/dict.
 
 Issues and contributions are welcome.
 

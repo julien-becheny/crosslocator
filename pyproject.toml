@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "crosslocator"
-version = "0.1.0"
+version = "0.2.0"
 description = "Define a UI selector once, resolve it on every platform (Android, iOS, iPadOS, Windows, web)."
 readme = "README.md"
 requires-python = ">=3.9"

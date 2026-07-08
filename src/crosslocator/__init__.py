@@ -1,4 +1,5 @@
 """crosslocator — define a UI selector once, resolve it on every platform."""
+from .appium import use_appium
 from .locator import (
     CrossLocatorError,
     Locator,
@@ -12,7 +13,7 @@ from .platform import (
     set_platform_provider,
 )
 
-__version__ = "0.1.0"
+__version__ = "0.2.0"
 
 __all__ = [
     "Locator",
@@ -20,6 +21,7 @@ __all__ = [
     "get_current_platform",
     "set_current_platform",
     "set_platform_provider",
+    "use_appium",
     "CrossLocatorError",
     "LocatorNotFound",
     "PlatformNotSet",
