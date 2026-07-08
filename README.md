@@ -87,6 +87,12 @@ set_platform_provider(lambda: driver.capabilities["platformName"])
 - any platform → falls back to `default`
 - nothing found → `LocatorNotFound`
 
+## Examples
+
+Runnable examples (no device needed) live in the [`examples/`](examples/) folder —
+a login screen resolved across Android, iOS, iPadOS and Windows, plus a Robot
+Framework suite.
+
 ## Roadmap
 
 - **v0.1 (this release):** the core `Locator` type, platform resolution, Robot Framework keywords.
