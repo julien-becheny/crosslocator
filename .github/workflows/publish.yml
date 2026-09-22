@@ -1,0 +1,58 @@
+name: Publish
+
+"on":
+  push:
+    tags: ["v*"]
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+
+    environment:
+      name: pypi
+      url: https://pypi.org/project/crosslocator/
+
+    permissions:
+      # Trusted publishing: PyPI trusts this workflow, so no API token is stored.
+      id-token: write
+      # Needed to create the GitHub release.
+      contents: write
+
+    steps:
+      - name: Check out the repository
+        uses: actions/checkout@v4
+        with:
+          # Release notes are generated from history, which a shallow clone lacks.
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - name: Install build tooling
+        run: pip install build twine
+
+      - name: Build the distributions
+        run: python -m build
+
+      - name: Check the distributions
+        # Whatever PyPI would reject, better to know before uploading.
+        run: twine check dist/*
+
+      - name: Publish to PyPI
+        uses: pypa/gh-action-pypi-publish@release/v1
+
+      - name: Create the GitHub release
+        env:
+          GH_TOKEN: ${{ github.token }}
+          # Passed as an environment variable rather than inlined, so a tag name
+          # can never be injected into the shell command.
+          TAG: ${{ github.ref_name }}
+        run: |
+          gh release create "$TAG" \
+            --title "$TAG" \
+            --generate-notes \
+            --verify-tag \
+            dist/*

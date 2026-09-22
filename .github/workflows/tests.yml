@@ -1,0 +1,35 @@
+name: Tests
+
+"on":
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  tests:
+    name: Python ${{ matrix.python }}
+    runs-on: ubuntu-latest
+
+    strategy:
+      # One broken version must not hide the state of the others.
+      fail-fast: false
+      matrix:
+        python: ["3.9", "3.10", "3.11", "3.12", "3.13"]
+
+    steps:
+      - name: Check out the repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python ${{ matrix.python }}
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python }}
+          cache: pip
+
+      - name: Install the package
+        # Installing first is what catches a broken build, not reading the code.
+        run: pip install -e ".[dev]"
+
+      - name: Run the test suite
+        run: pytest -q
